@@ -14,21 +14,45 @@
 # An example set of tests is shown below. It is important to note that these tests are not "unit tests" in 
 # that they are not ran in isolation but in the order shown and the state of the device is not reset or 
 # altered in between executions (unless preconditions are used).
-tests = [ {'description': 'This test will run first.',
-    'steps': [ {'inputs': [('PINA',<val>)], 'iterations': 1 } ],
-    'expected': [('PORT',<val>)],
-    },
-    {'description': 'This test will run second.',
-    'steps': [ {'inputs': [('PIN', <val>)],'iterations': 1}, # Set PIN to val then run one iteration
-        {'inputs': [('PIN',<val>)], 'time': 300 }, # Set PIN to val then run 300 ms
-        {'inputs': [('PIN',<val>)], 'iterations': 1, 'expected': [('PORT',<val>)]}, 
-        {'inputs': [('PIN',<val>)], 'time': 600}, ],
-    'expected': [('PORT',<val>)],
-    },
-    ]
 
-# Optionally you can add a set of "watch" variables these need to be global or static and may need
-# to be scoped at the function level (for static variables) if there are naming conflicts. The 
-# variables listed here will display everytime you hit (and stop at) a breakpoint
-watch = ['<function>::<static-var>','PORTB']
+tests = [{ 
+
+    # Total Weight = 765, WeightDiff = 0, final binary should be 101111 01 or
+    # 0xBD
+    'description': 'PINA: 0xFF, PINB: 0xFF, PINC: 0xFF  => PORTD: 0xBD',
+    'steps': [ {'inputs': [('PINA',0xFF), ('PINB',0xFF), ('PINC',0xFF)],
+    'iterations': 5 } ],
+    'expected': [('PORTD',0xBD)],
+    },
+    
+    # Total Weight = 365, WeightDiff = 85, final binary should be 010110 11 or
+    # 0x5B
+    {
+    'description': 'PINA: 0x8C, PINB: 0x00, PINC: 0xE1  => PORTD: 0x5B',
+    'steps': [ {'inputs': [('PINA',0x8C), ('PINB',0x00), ('PINC',0xE1)],
+    'iterations': 5 } ],
+    'expected': [('PORTD',0x5B)],
+    },
+
+    # Total Weight = 100, WeightDiff = 100, final binary should be 000110 10 or
+    # 0x1A
+    {
+    'description': 'PINA: 0x64, PINB: 0x00, PINC: 0x00  => PORTD: 0x1A',
+    'steps': [ {'inputs': [('PINA',0x64), ('PINB',0x00), ('PINC',0x00)],
+    'iterations': 5 } ],
+    'expected': [('PORTD',0x1A)],
+    },
+    
+    # Total Weight = 123, WeightDiff = 2, final binary should be 000111 00 or
+    # 0x1C
+    {
+    'description': 'PINA: 0x3C, PINB: 0x03, PINC: 0x3A  => PORTD: 0x1C',
+    'steps': [ {'inputs': [('PINA',0x3C), ('PINB',0x03), ('PINC',0x3A)],
+    'iterations': 5 } ],
+    'expected': [('PORTD',0x1C)],
+    },
+
+    ]
+    
+watch = ['main::tmpA', 'main::tmpB', 'main::tmpC', 'main::totalWeight', 'PORTD']
 
