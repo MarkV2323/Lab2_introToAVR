@@ -1,10 +1,11 @@
 /*	Author: Mark Vincent
  *  Partner(s) Name: 
  *	Lab Section: A01
- *	Assignment: Lab #2  Exercise #2
+ *	Assignment: Lab #2  Exercise #3
  *	Exercise Description: For this exercise, we use pin A3 - A0 as parking
  *	checkers, and are suppose to output the number of available spaces on Port
- *  C.
+ *  C. We need to extend that program from exercise #2 to also only write those
+ *  open spaces to PC3 - PC0 and write 1 to PC7 if the lot is full.
  *
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
@@ -49,6 +50,11 @@ int main(void) {
             cntavail = cntavail - 1;
         }
         
+        // Checks if parking lot is full, if so, writes 1 to PC7.
+        if (cntavail == 0) {
+            cntavail = (cntavail & 0x0F) | 0x80;
+        }
+
         // Writes cntavail to PORTC and resets it back to 0.
         PORTC = cntavail;
         cntavail = 0x04;
